@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Configuración estricta para móviles: evita zoom al escribir y ajusta a la pantalla -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    
+    <!-- Evitar caché en móviles -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Tema para la barra superior del celular (Android/iOS) -->
+    <meta name="theme-color" content="#4f46e5">
+    
+    <title>Caja Móvil</title>
+    
+    <!-- Cargar Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Desactivar selección de texto y efectos de toque feos en móviles */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            background-color: #f1f5f9;
+        }
+        /* Ocultar barra de scroll en la lista para que sea limpia en móvil */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-sans pb-8">
+
+    <!-- Encabezado fijo superior -->
+    <div class="bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-10 flex justify-center items-center gap-2">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+        <h1 class="text-xl font-bold tracking-wide">Caja Rápida</h1>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="px-4 mt-4 space-y-5 max-w-md mx-auto">
+        
+        <!-- ============================== -->
+        <!-- 1. PRODUCTO NORMAL             -->
+        <!-- ============================== -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">1. Agregar Producto</label>
+            <div class="flex gap-2">
+                <div class="relative flex-1">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl">$</span>
+                    <!-- Input gigante para móvil -->
+                    <input
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        id="input-precio-producto"
+                        placeholder="Precio"
+                        class="w-full h-14 pl-9 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-xl font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        oninput="formatInput(this)"
+                        onkeydown="if(event.key === 'Enter') agregarProductoNormal()"
+                    />
+                </div>
+                <!-- Botón gigante -->
+                <button 
+                    type="button"
+                    onclick="agregarProductoNormal()"
+                    class="h-14 w-14 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 transition-transform"
+                >
+                    <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================== -->
+        <!-- 2. CIGARROS ($150 c/u)         -->
+        <!-- ============================== -->
+        <div class="bg-amber-50 rounded-2xl p-4 shadow-sm border border-amber-200">
+            <div class="flex justify-between items-center mb-3">
+                <label class="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Cigarros
+                </label>
+                <span class="bg-amber-200 text-amber-900 text-xs font-black px-2 py-1 rounded-md">$150 c/u</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <!-- Mitad Izquierda: Cantidad -->
+                <div>
+                    <span class="text-[10px] font-bold text-amber-600 mb-1 block">POR CANTIDAD</span>
+                    <div class="flex gap-1">
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            id="input-cig-cant"
+                            placeholder="Ej: 3"
+                            class="w-full h-12 px-3 text-center bg-white border border-amber-300 rounded-xl text-lg font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            oninput="formatInput(this)"
+                        />
+                        <button type="button" onclick="agregarCigarroCant()" class="h-12 w-12 bg-amber-500 active:bg-amber-600 text-white rounded-xl flex items-center justify-center shrink-0 shadow-sm active:scale-95">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mitad Derecha: Dinero -->
+                <div>
+                    <span class="text-[10px] font-bold text-amber-600 mb-1 block">POR DINERO ($)</span>
+                    <div class="flex gap-1">
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            id="input-cig-dinero"
+                            placeholder="Ej: 1000"
+                            class="w-full h-12 px-2 text-center bg-white border border-amber-300 rounded-xl text-lg font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            oninput="formatInput(this); calcularHintCigarro();"
+                        />
+                        <button type="button" onclick="agregarCigarroDinero()" class="h-12 w-12 bg-amber-500 active:bg-amber-600 text-white rounded-xl flex items-center justify-center shrink-0 shadow-sm active:scale-95">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Ayuda para mostrar cuántos cigarros son por plata -->
+            <p id="hint-cig-dinero" class="text-xs text-amber-800 font-bold mt-2 text-center hidden bg-amber-200/50 py-1 rounded-lg"></p>
+        </div>
+
+        <!-- ============================== -->
+        <!-- 3. CUENTA (CARRITO)            -->
+        <!-- ============================== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-500 uppercase">Detalle Cuenta</span>
+                <span id="texto-total-venta" class="font-black text-indigo-700 text-lg">$0</span>
+            </div>
+            
+            <div id="contenedor-carrito" class="max-h-40 overflow-y-auto no-scrollbar p-2 hidden bg-slate-50">
+                <div id="lista-carrito" class="space-y-2"></div>
+            </div>
+            <p id="carrito-vacio" class="text-center text-slate-400 text-sm py-6">La cuenta está vacía.</p>
+        </div>
+
+        <!-- ============================== -->
+        <!-- 4. PAGO Y VUELTO               -->
+        <!-- ============================== -->
+        <div class="bg-emerald-50 rounded-2xl p-4 shadow-sm border border-emerald-200">
+            <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">¿Con cuánto pagan?</label>
+            
+            <!-- Input Pago -->
+            <div class="relative mb-3">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl">$</span>
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    id="input-pago"
+                    placeholder="Monto entregado"
+                    class="w-full h-14 pl-9 pr-4 bg-white border-2 border-emerald-200 rounded-xl text-2xl font-black text-emerald-800 focus:outline-none focus:border-emerald-500"
+                    oninput="formatInput(this); actualizarVuelto();"
+                />
+            </div>
+
+            <!-- Botones de Billetes Rápidos (¡Mágico para móviles!) -->
+            <div class="grid grid-cols-4 gap-2 mb-4">
+                <button onclick="pagoRapido(1000)" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 rounded-lg shadow-sm active:bg-slate-100 text-sm">$1.000</button>
+                <button onclick="pagoRapido(2000)" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 rounded-lg shadow-sm active:bg-slate-100 text-sm">$2.000</button>
+                <button onclick="pagoRapido(5000)" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 rounded-lg shadow-sm active:bg-slate-100 text-sm">$5.000</button>
+                <button onclick="pagoRapido(10000)" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 rounded-lg shadow-sm active:bg-slate-100 text-sm">$10.000</button>
+            </div>
+
+            <!-- Pantalla Resultado -->
+            <div id="caja-resultado" class="bg-white p-4 rounded-xl text-center shadow-inner border border-emerald-100">
+                <p id="titulo-resultado" class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Vuelto a entregar</p>
+                <div id="monto-resultado" class="text-5xl font-black tracking-tighter text-slate-300">$0</div>
+            </div>
+
+            <!-- Sugerencia Billetes -->
+            <div id="lista-billetes" class="flex flex-wrap gap-2 justify-center mt-3"></div>
+        </div>
+
+        <!-- Botón Limpiar Todo gigante -->
+        <button
+            type="button"
+            onclick="limpiarTodo()"
+            class="w-full h-14 mt-4 bg-red-100 text-red-600 font-bold rounded-xl flex items-center justify-center gap-2 active:bg-red-200 transition-colors"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            NUEVO CLIENTE
+        </button>
+
+    </div>
+
+    <!-- SCRIPT DE LÓGICA (Sin librerías, 100% puro y rápido) -->
+    <script>
+        const PRECIO_CIGARRO = 150;
+        let carrito = [];
+
+        function cleanNum(str) {
+            if (!str) return '';
+            return str.toString().replace(/\D/g, '');
+        }
+
+        function formatNum(numStr) {
+            if (!numStr) return '';
+            return numStr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatCLP(num) {
+            return "$" + formatNum(num);
+        }
+
+        function formatInput(element) {
+            let num = cleanNum(element.value);
+            element.value = num ? formatNum(num) : '';
+        }
+
+        function agregarAlCarrito(precio, descripcion) {
+            carrito.push({ id: Date.now(), precio: precio, desc: descripcion });
+            renderCarrito();
+            actualizarVuelto();
+            
+            // Hacer scroll hasta abajo en el carrito si hay muchos items
+            setTimeout(() => {
+                let cont = document.getElementById('contenedor-carrito');
+                cont.scrollTop = cont.scrollHeight;
+            }, 50);
+        }
+
+        function eliminarProducto(id) {
+            carrito = carrito.filter(function(item) { return item.id !== id; });
+            renderCarrito();
+            actualizarVuelto();
+        }
+
+        function renderCarrito() {
+            const contCarrito = document.getElementById('contenedor-carrito');
+            const listaCarrito = document.getElementById('lista-carrito');
+            const carritoVacio = document.getElementById('carrito-vacio');
+            const txtTotalVenta = document.getElementById('texto-total-venta');
+
+            if (carrito.length === 0) {
+                contCarrito.classList.add('hidden');
+                carritoVacio.classList.remove('hidden');
+                txtTotalVenta.textContent = "$0";
+            } else {
+                contCarrito.classList.remove('hidden');
+                carritoVacio.classList.add('hidden');
+                
+                let html = '';
+                let total = 0;
+                for(let i=0; i<carrito.length; i++) {
+                    let item = carrito[i];
+                    total += item.precio;
+                    
+                    let icono = item.desc === 'Producto' 
+                        ? '<span class="text-[10px] text-slate-400 font-bold block leading-none">PROD</span>' 
+                        : '<span class="text-[10px] text-amber-500 font-bold block leading-none">' + item.desc.toUpperCase() + '</span>';
+
+                    html += `
+                        <div class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-100 shadow-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="bg-indigo-50 w-7 h-7 rounded-full flex items-center justify-center text-indigo-600 font-black text-xs shrink-0">${i + 1}</div>
+                                <div>
+                                    ${icono}
+                                    <span class="font-black text-slate-700 text-sm leading-tight">${formatCLP(item.precio)}</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="eliminarProducto(${item.id})" class="text-red-300 hover:text-red-500 active:scale-90 p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                    `;
+                }
+                listaCarrito.innerHTML = html;
+                txtTotalVenta.textContent = formatCLP(total);
+            }
+        }
+
+        function agregarProductoNormal() {
+            let input = document.getElementById('input-precio-producto');
+            let val = cleanNum(input.value);
+            if (val && Number(val) > 0) {
+                agregarAlCarrito(Number(val), 'Producto');
+                input.value = '';
+            }
+        }
+
+        function agregarCigarroCant() {
+            let input = document.getElementById('input-cig-cant');
+            let cant = cleanNum(input.value);
+            if (cant && Number(cant) > 0) {
+                agregarAlCarrito(Number(cant) * PRECIO_CIGARRO, cant + ' Cigarros');
+                input.value = '';
+            }
+        }
+
+        function calcularHintCigarro() {
+            let input = document.getElementById('input-cig-dinero');
+            let hint = document.getElementById('hint-cig-dinero');
+            let dinero = Number(cleanNum(input.value));
+            
+            if (dinero >= PRECIO_CIGARRO) {
+                let cant = Math.floor(dinero / PRECIO_CIGARRO);
+                hint.innerHTML = `👉 Son <span class="font-black text-amber-900">${cant} cigarros</span> por ${formatCLP(cant * PRECIO_CIGARRO)}`;
+                hint.classList.remove('hidden');
+            } else if (dinero > 0) {
+                hint.innerHTML = "No alcanza (mín. $150)";
+                hint.classList.remove('hidden');
+            } else {
+                hint.classList.add('hidden');
+            }
+        }
+
+        function agregarCigarroDinero() {
+            let input = document.getElementById('input-cig-dinero');
+            let hint = document.getElementById('hint-cig-dinero');
+            let dinero = Number(cleanNum(input.value));
+            
+            if (dinero >= PRECIO_CIGARRO) {
+                let cant = Math.floor(dinero / PRECIO_CIGARRO);
+                agregarAlCarrito(cant * PRECIO_CIGARRO, cant + ' Cigarros');
+                input.value = '';
+                hint.classList.add('hidden');
+            }
+        }
+
+        // Función para los botones rápidos de billetes
+        function pagoRapido(monto) {
+            let inputPago = document.getElementById('input-pago');
+            inputPago.value = formatNum(monto.toString());
+            actualizarVuelto();
+        }
+
+        function actualizarVuelto() {
+            let inputPago = document.getElementById('input-pago');
+            let cajaRes = document.getElementById('caja-resultado');
+            let tituloRes = document.getElementById('titulo-resultado');
+            let montoRes = document.getElementById('monto-resultado');
+            let listaBilletes = document.getElementById('lista-billetes');
+
+            let totalVenta = 0;
+            for(let j=0; j<carrito.length; j++) totalVenta += carrito[j].precio;
+
+            let pago = Number(cleanNum(inputPago.value));
+            listaBilletes.innerHTML = ''; // Limpiar billetes
+
+            if (totalVenta === 0) {
+                cajaRes.className = "bg-slate-50 p-4 rounded-xl text-center shadow-inner border border-slate-200";
+                montoRes.className = "text-5xl font-black tracking-tighter text-slate-300";
+                tituloRes.className = "text-xs font-bold text-slate-400 uppercase tracking-widest mb-1";
+                tituloRes.textContent = "VUELTO";
+                montoRes.textContent = "$0";
+                return;
+            }
+
+            if (!pago) {
+                cajaRes.className = "bg-indigo-50 p-4 rounded-xl text-center shadow-inner border border-indigo-200";
+                montoRes.className = "text-5xl font-black tracking-tighter text-indigo-700";
+                tituloRes.className = "text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1";
+                tituloRes.textContent = "TOTAL A COBRAR";
+                montoRes.textContent = formatCLP(totalVenta);
+                return;
+            }
+
+            let vuelto = pago - totalVenta;
+
+            if (vuelto < 0) {
+                cajaRes.className = "bg-red-50 p-4 rounded-xl text-center shadow-inner border border-red-200";
+                montoRes.className = "text-5xl font-black tracking-tighter text-red-600";
+                tituloRes.className = "text-xs font-bold text-red-500 uppercase tracking-widest mb-1";
+                tituloRes.textContent = "FALTA DINERO";
+                montoRes.textContent = formatCLP(Math.abs(vuelto));
+            } else {
+                cajaRes.className = "bg-emerald-50 p-4 rounded-xl text-center shadow-inner border border-emerald-300";
+                montoRes.className = "text-5xl font-black tracking-tighter text-emerald-600";
+                tituloRes.className = "text-xs font-bold text-emerald-700 uppercase tracking-widest mb-1";
+                tituloRes.textContent = "VUELTO A ENTREGAR";
+                montoRes.textContent = formatCLP(vuelto);
+                
+                if (vuelto > 0) {
+                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 100, 50, 10];
+                    let restante = vuelto;
+                    let desgloseHtml = '';
+                    for (let d=0; d<denominaciones.length; d++) {
+                        let denom = denominaciones[d];
+                        if (restante >= denom) {
+                            let cant = Math.floor(restante / denom);
+                            desgloseHtml += `
+                                <div class="bg-white border-2 border-emerald-100 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                                    <span class="font-black text-emerald-600 text-xs">${cant}x</span>
+                                    <span class="font-bold text-slate-600 text-xs">${formatCLP(denom)}</span>
+                                </div>
+                            `;
+                            restante %= denom;
+                        }
+                    }
+                    listaBilletes.innerHTML = desgloseHtml;
+                }
+            }
+        }
+
+        function limpiarTodo() {
+            carrito = [];
+            document.getElementById('input-precio-producto').value = '';
+            document.getElementById('input-cig-cant').value = '';
+            document.getElementById('input-cig-dinero').value = '';
+            document.getElementById('input-pago').value = '';
+            document.getElementById('hint-cig-dinero').classList.add('hidden');
+            renderCarrito();
+            actualizarVuelto();
+        }
+
+        // Inicio limpio
+        renderCarrito();
+    </script>
+</body>
+</html>
