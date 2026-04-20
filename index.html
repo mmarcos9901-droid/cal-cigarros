@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +8,7 @@
     
     <!-- Evitar caché en móviles -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  2  <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
     <!-- Tema para la barra superior del celular (Android/iOS) -->
@@ -50,30 +51,59 @@
     <div class="px-4 mt-4 space-y-5 max-w-md mx-auto">
         
         <!-- ============================== -->
-        <!-- 1. PRODUCTO NORMAL             -->
+        <!-- 1. PRODUCTO NORMAL CON MULTIPLICADOR -->
         <!-- ============================== -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">1. Agregar Producto</label>
             <div class="flex gap-2">
+                
+                <!-- Input Precio -->
                 <div class="relative flex-1">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl">$</span>
-                    <!-- Input gigante para móvil -->
                     <input
                         type="text"
                         inputmode="numeric"
                         pattern="[0-9]*"
                         id="input-precio-producto"
                         placeholder="Precio"
-                        class="w-full h-14 pl-9 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-xl font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        class="w-full h-14 pl-9 pr-2 bg-slate-50 border border-slate-200 rounded-xl text-xl font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         oninput="formatInput(this)"
-                        onkeydown="if(event.key === 'Enter') agregarProductoNormal()"
                     />
                 </div>
+
+                <!-- Input Cantidad (Multiplicador interactivo) -->
+                <div class="flex items-center h-14 w-[115px] shrink-0 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 shadow-sm">
+                    <!-- Botón Restar -->
+                    <button type="button" onclick="cambiarCantidad(-1)" class="h-full w-9 flex items-center justify-center text-slate-500 active:bg-slate-300 bg-slate-100 border-r border-slate-200 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                    </button>
+                    
+                    <!-- Campo Numérico -->
+                    <div class="relative flex-1 h-full">
+                        <span class="absolute left-1.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">x</span>
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            id="input-cant-producto"
+                            value="1"
+                            class="w-full h-full pl-3.5 pr-1 bg-transparent text-lg text-center font-black text-indigo-700 focus:outline-none"
+                            oninput="formatInput(this)"
+                            onfocus="this.select()" 
+                        />
+                    </div>
+
+                    <!-- Botón Sumar -->
+                    <button type="button" onclick="cambiarCantidad(1)" class="h-full w-9 flex items-center justify-center text-slate-500 active:bg-slate-300 bg-slate-100 border-l border-slate-200 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                </div>
+
                 <!-- Botón gigante -->
                 <button 
                     type="button"
                     onclick="agregarProductoNormal()"
-                    class="h-14 w-14 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 transition-transform"
+                    class="h-14 w-14 shrink-0 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 transition-transform"
                 >
                     <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
                 </button>
@@ -200,7 +230,7 @@
 
     </div>
 
-    <!-- SCRIPT DE LÓGICA (Sin librerías, 100% puro y rápido) -->
+    <!-- SCRIPT DE LÓGICA -->
     <script>
         const PRECIO_CIGARRO = 150;
         let carrito = [];
@@ -229,7 +259,7 @@
             renderCarrito();
             actualizarVuelto();
             
-            // Hacer scroll hasta abajo en el carrito si hay muchos items
+            // Hacer scroll hasta abajo en el carrito
             setTimeout(() => {
                 let cont = document.getElementById('contenedor-carrito');
                 cont.scrollTop = cont.scrollHeight;
@@ -262,16 +292,17 @@
                     let item = carrito[i];
                     total += item.precio;
                     
-                    let icono = item.desc === 'Producto' 
-                        ? '<span class="text-[10px] text-slate-400 font-bold block leading-none">PROD</span>' 
-                        : '<span class="text-[10px] text-amber-500 font-bold block leading-none">' + item.desc.toUpperCase() + '</span>';
+                    // Diferenciar color según si es cigarro o producto normal
+                    let isCigarro = item.desc.includes('Cigarro');
+                    let color = isCigarro ? 'text-amber-500' : 'text-indigo-500';
+                    let descFormat = item.desc === 'Producto' ? 'PROD' : item.desc.toUpperCase();
 
                     html += `
                         <div class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-100 shadow-sm">
                             <div class="flex items-center gap-2">
                                 <div class="bg-indigo-50 w-7 h-7 rounded-full flex items-center justify-center text-indigo-600 font-black text-xs shrink-0">${i + 1}</div>
                                 <div>
-                                    ${icono}
+                                    <span class="text-[10px] ${color} font-bold block leading-none">${descFormat}</span>
                                     <span class="font-black text-slate-700 text-sm leading-tight">${formatCLP(item.precio)}</span>
                                 </div>
                             </div>
@@ -286,12 +317,46 @@
             }
         }
 
+        // ==============================================
+        // NUEVA FUNCIÓN PARA AGREGAR PRODUCTOS CON MULTIPLICADOR
+        // ==============================================
+        
+        // Función para los botones de + y -
+        function cambiarCantidad(delta) {
+            let input = document.getElementById('input-cant-producto');
+            let actual = Number(cleanNum(input.value)) || 0;
+            let nuevo = actual + delta;
+            
+            // Que nunca baje de 1
+            if (nuevo < 1) nuevo = 1; 
+            
+            input.value = nuevo;
+        }
+
         function agregarProductoNormal() {
-            let input = document.getElementById('input-precio-producto');
-            let val = cleanNum(input.value);
-            if (val && Number(val) > 0) {
-                agregarAlCarrito(Number(val), 'Producto');
-                input.value = '';
+            let inputPrecio = document.getElementById('input-precio-producto');
+            let inputCant = document.getElementById('input-cant-producto');
+            
+            let precio = Number(cleanNum(inputPrecio.value));
+            
+            // Si la cantidad está en blanco, se asume 1
+            let strCant = cleanNum(inputCant.value);
+            let cant = strCant ? Number(strCant) : 1;
+            
+            if (precio > 0 && cant > 0) {
+                let totalItem = precio * cant;
+                
+                // Generar descripción. Ej: "3x a $300"
+                let descripcion = cant > 1 ? `${cant}x a ${formatCLP(precio)}` : 'Producto';
+                
+                agregarAlCarrito(totalItem, descripcion);
+                
+                // Limpiar casillas (El precio se borra, la cantidad vuelve a 1)
+                inputPrecio.value = '';
+                inputCant.value = '1';
+                
+                // Volver a poner el cursor en el precio por si quiere seguir sumando rápido (opcional en celular)
+                // inputPrecio.focus(); 
             }
         }
 
@@ -307,121 +372,4 @@
         function calcularHintCigarro() {
             let input = document.getElementById('input-cig-dinero');
             let hint = document.getElementById('hint-cig-dinero');
-            let dinero = Number(cleanNum(input.value));
-            
-            if (dinero >= PRECIO_CIGARRO) {
-                let cant = Math.floor(dinero / PRECIO_CIGARRO);
-                hint.innerHTML = `👉 Son <span class="font-black text-amber-900">${cant} cigarros</span> por ${formatCLP(cant * PRECIO_CIGARRO)}`;
-                hint.classList.remove('hidden');
-            } else if (dinero > 0) {
-                hint.innerHTML = "No alcanza (mín. $150)";
-                hint.classList.remove('hidden');
-            } else {
-                hint.classList.add('hidden');
-            }
-        }
-
-        function agregarCigarroDinero() {
-            let input = document.getElementById('input-cig-dinero');
-            let hint = document.getElementById('hint-cig-dinero');
-            let dinero = Number(cleanNum(input.value));
-            
-            if (dinero >= PRECIO_CIGARRO) {
-                let cant = Math.floor(dinero / PRECIO_CIGARRO);
-                agregarAlCarrito(cant * PRECIO_CIGARRO, cant + ' Cigarros');
-                input.value = '';
-                hint.classList.add('hidden');
-            }
-        }
-
-        // Función para los botones rápidos de billetes
-        function pagoRapido(monto) {
-            let inputPago = document.getElementById('input-pago');
-            inputPago.value = formatNum(monto.toString());
-            actualizarVuelto();
-        }
-
-        function actualizarVuelto() {
-            let inputPago = document.getElementById('input-pago');
-            let cajaRes = document.getElementById('caja-resultado');
-            let tituloRes = document.getElementById('titulo-resultado');
-            let montoRes = document.getElementById('monto-resultado');
-            let listaBilletes = document.getElementById('lista-billetes');
-
-            let totalVenta = 0;
-            for(let j=0; j<carrito.length; j++) totalVenta += carrito[j].precio;
-
-            let pago = Number(cleanNum(inputPago.value));
-            listaBilletes.innerHTML = ''; // Limpiar billetes
-
-            if (totalVenta === 0) {
-                cajaRes.className = "bg-slate-50 p-4 rounded-xl text-center shadow-inner border border-slate-200";
-                montoRes.className = "text-5xl font-black tracking-tighter text-slate-300";
-                tituloRes.className = "text-xs font-bold text-slate-400 uppercase tracking-widest mb-1";
-                tituloRes.textContent = "VUELTO";
-                montoRes.textContent = "$0";
-                return;
-            }
-
-            if (!pago) {
-                cajaRes.className = "bg-indigo-50 p-4 rounded-xl text-center shadow-inner border border-indigo-200";
-                montoRes.className = "text-5xl font-black tracking-tighter text-indigo-700";
-                tituloRes.className = "text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1";
-                tituloRes.textContent = "TOTAL A COBRAR";
-                montoRes.textContent = formatCLP(totalVenta);
-                return;
-            }
-
-            let vuelto = pago - totalVenta;
-
-            if (vuelto < 0) {
-                cajaRes.className = "bg-red-50 p-4 rounded-xl text-center shadow-inner border border-red-200";
-                montoRes.className = "text-5xl font-black tracking-tighter text-red-600";
-                tituloRes.className = "text-xs font-bold text-red-500 uppercase tracking-widest mb-1";
-                tituloRes.textContent = "FALTA DINERO";
-                montoRes.textContent = formatCLP(Math.abs(vuelto));
-            } else {
-                cajaRes.className = "bg-emerald-50 p-4 rounded-xl text-center shadow-inner border border-emerald-300";
-                montoRes.className = "text-5xl font-black tracking-tighter text-emerald-600";
-                tituloRes.className = "text-xs font-bold text-emerald-700 uppercase tracking-widest mb-1";
-                tituloRes.textContent = "VUELTO A ENTREGAR";
-                montoRes.textContent = formatCLP(vuelto);
-                
-                if (vuelto > 0) {
-                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 100, 50, 10];
-                    let restante = vuelto;
-                    let desgloseHtml = '';
-                    for (let d=0; d<denominaciones.length; d++) {
-                        let denom = denominaciones[d];
-                        if (restante >= denom) {
-                            let cant = Math.floor(restante / denom);
-                            desgloseHtml += `
-                                <div class="bg-white border-2 border-emerald-100 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                                    <span class="font-black text-emerald-600 text-xs">${cant}x</span>
-                                    <span class="font-bold text-slate-600 text-xs">${formatCLP(denom)}</span>
-                                </div>
-                            `;
-                            restante %= denom;
-                        }
-                    }
-                    listaBilletes.innerHTML = desgloseHtml;
-                }
-            }
-        }
-
-        function limpiarTodo() {
-            carrito = [];
-            document.getElementById('input-precio-producto').value = '';
-            document.getElementById('input-cig-cant').value = '';
-            document.getElementById('input-cig-dinero').value = '';
-            document.getElementById('input-pago').value = '';
-            document.getElementById('hint-cig-dinero').classList.add('hidden');
-            renderCarrito();
-            actualizarVuelto();
-        }
-
-        // Inicio limpio
-        renderCarrito();
-    </script>
-</body>
-</html>
+            let d
